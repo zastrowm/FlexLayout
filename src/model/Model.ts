@@ -254,12 +254,13 @@ export class Model {
      * @param action the action to perform
      * @returns added Node for Actions.addNode; undefined otherwise
      */
-    doAction(action: Action): Node | undefined {
+    doAction(action: Action, initializer?: (node: Node) => void): Node | undefined {
         let returnVal = undefined;
         // console.log(action);
         switch (action.type) {
             case Actions.ADD_NODE: {
                 const newNode = new TabNode(this, action.data.json, true);
+                initializer?.(newNode);
                 const toNode = this._idMap[action.data.toNode] as Node & IDraggable;
                 if (toNode instanceof TabSetNode || toNode instanceof BorderNode || toNode instanceof RowNode) {
                     toNode.drop(newNode, DockLocation.getByName(action.data.location), action.data.index, action.data.select);

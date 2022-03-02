@@ -10,6 +10,7 @@ import { useTabOverflow } from "./TabOverflowHook";
 import { Orientation } from "../Orientation";
 import { CLASSES } from "../Types";
 import { hideElement, isAuxMouseEvent } from "./Utils";
+import { isButtonOverride } from "./Overrides";
 
 /** @internal */
 export interface ITabSetProps {
@@ -57,6 +58,10 @@ export const TabSet = (props: ITabSetProps) => {
     };
 
     const onMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent> | React.TouchEvent<HTMLDivElement>) => {
+        if (isButtonOverride(event)) {
+            return;
+        }
+
         if (!isAuxMouseEvent(event)) {
             let name = node.getName();
             if (name === undefined) {

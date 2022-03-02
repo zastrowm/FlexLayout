@@ -8,6 +8,7 @@ import { IIcons, ILayoutCallbacks } from "./Layout";
 import { ICloseType } from "../model/ICloseType";
 import { CLASSES } from "../Types";
 import { getRenderStateEx, isAuxMouseEvent } from "./Utils";
+import { isButtonOverride } from "./Overrides";
 
 /** @internal */
 export interface ITabButtonProps {
@@ -27,6 +28,9 @@ export const TabButton = (props: ITabButtonProps) => {
     const contentRef = React.useRef<HTMLInputElement | null>(null);
 
     const onMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent> | React.TouchEvent<HTMLDivElement>) => {
+        if (isButtonOverride(event)) {
+            return;
+        }
 
         if (!isAuxMouseEvent(event) && !layout.getEditingTab()) {
             layout.dragStart(event, undefined, node, node.isEnableDrag(), onClick, onDoubleClick);
@@ -34,6 +38,10 @@ export const TabButton = (props: ITabButtonProps) => {
     };
 
     const onAuxMouseClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (isButtonOverride(event)) {
+            return;
+        }
+
         if (isAuxMouseEvent(event)) {
             layout.auxMouseClick(node, event);
         }

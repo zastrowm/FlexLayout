@@ -4,7 +4,7 @@ import { Actions } from "../model/Actions";
 import { TabNode } from "../model/TabNode";
 import { TabSetNode } from "../model/TabSetNode";
 import { showPopup } from "../PopupMenu";
-import { IIcons, ILayoutCallbacks } from "./Layout";
+import { IIcons, ILayoutCallbacks, TabSetCustomRender } from "./Layout";
 import { TabButton } from "./TabButton";
 import { useTabOverflow } from "./TabOverflowHook";
 import { Orientation } from "../Orientation";
@@ -320,7 +320,8 @@ export const TabSet = (props: ITabSetProps) => {
         }
 
         header = (
-            <div className={tabHeaderClasses} style={{ height: node.getHeaderHeight() + "px" }}
+            <div key="header"
+                className={tabHeaderClasses} style={{ height: node.getHeaderHeight() + "px" }}
                 data-layout-path={path + "/header"}
                 onMouseDown={onMouseDown}
                 onContextMenu={onContextMenu}
@@ -335,7 +336,8 @@ export const TabSet = (props: ITabSetProps) => {
 
     const tabStripStyle: { [key: string]: string } = { height: node.getTabStripHeight() + "px" };
     tabStrip = (
-        <div className={tabStripClasses} style={tabStripStyle}
+        <div key="tabstrip"
+            className={tabStripClasses} style={tabStripStyle}
             data-layout-path={path + "/tabstrip"}
             onMouseDown={onMouseDown}
             onContextMenu={onContextMenu}
@@ -364,15 +366,17 @@ export const TabSet = (props: ITabSetProps) => {
         }
     }
 
-    const center = <div className={cm(CLASSES.FLEXLAYOUT__TABSET_CONTENT)}>
+    const center = <div key='center' className={cm(CLASSES.FLEXLAYOUT__TABSET_CONTENT)}>
         {placeHolder}
     </div>
 
+    var customRender: TabSetCustomRender = layout.getTabSetCustomRenderCallback() ?? noop;
+    
     var content;
     if (node.getTabLocation() === "top") {
-        content = <>{header}{tabStrip}{center}</>;
+        content = <>{customRender(node, [header, tabStrip, center])}</>;
     } else {
-        content = <>{header}{center}{tabStrip}</>;
+        content = <>{customRender(node, [header, center, tabStrip])}</>;
     }
 
     return (
@@ -387,4 +391,6 @@ export const TabSet = (props: ITabSetProps) => {
     );
 };
 
-
+function noop<T>(node: unknown, nodes: React.ReactNode[]) {
+    return nodes;
+}

@@ -40,7 +40,7 @@ export type ShowOverflowMenuCallback = (
     onSelect: (item: { index: number; node: TabNode }) => void,
 ) => void;
 export type TabSetPlaceHolderCallback = (node: TabSetNode) => React.ReactNode;
-export type TabSetCustomRender = (node: TabSetNode, nodes: React.ReactNode[]) => React.ReactNode;
+export type TabSetCustomRender = (node: TabSetNode, nodes: React.ReactElement[]) => React.ReactNode;
 
 export interface ILayoutProps {
     model: Model;

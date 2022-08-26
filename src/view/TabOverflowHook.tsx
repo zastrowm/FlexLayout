@@ -4,6 +4,7 @@ import { Rect } from "../Rect";
 import { TabSetNode } from "../model/TabSetNode";
 import { BorderNode } from "../model/BorderNode";
 import { Orientation } from "../Orientation";
+import { CLASSES } from "../Types";
 
 /** @internal */
 export const useTabOverflow = (
@@ -41,7 +42,9 @@ export const useTabOverflow = (
 
     // needed to prevent default mouse wheel over tabset/border (cannot do with react event?)
     const onWheel = (event: Event) => {
-        event.preventDefault();
+        if ((event.target as HTMLElement).closest(CLASSES.FLEXLAYOUT__TABSET_TABBAR_OUTER)) {
+            event.preventDefault();
+        }
     };
 
     const getNear = (rect: Rect) => {
